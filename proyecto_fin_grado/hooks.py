@@ -5,6 +5,11 @@ app_description = "Exportar facturas UBL desde ERPNext"
 app_email = "floresbonilladorianmiguel@gmail.com"
 app_license = "mit"
 
+doctype_js = {
+    "Sales Invoice": "public/js/sales_invoice_ubl.js"
+}
+
+
 # Apps
 # ------------------
 
