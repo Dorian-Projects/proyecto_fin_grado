@@ -6,8 +6,11 @@ app_email = "floresbonilladorianmiguel@gmail.com"
 app_license = "mit"
 
 doctype_js = {
-    "Sales Invoice": "public/js/sales_invoice_ubl.js"
+    "Sales Invoice": "public/js/sales_invoice_ubl.js",
+    "Purchase Invoice": "public/js/purchase_invoice_ubl_form.js"
 }
+
+
 
 
 # Apps

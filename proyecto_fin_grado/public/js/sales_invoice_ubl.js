@@ -1,6 +1,6 @@
 frappe.ui.form.on('Sales Invoice', {
     refresh: function(frm) {
-        if (!frm.is_new()) {
+        if (frm.doc.docstatus === 1 && !frm.doc.is_return) {
             frm.add_custom_button(__('Exportar UBL'), function() {
                 frappe.call({
                     method: 'proyecto_fin_grado.api.exportar_ubl',
