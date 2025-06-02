@@ -1,5 +1,4 @@
 import frappe
-from frappe import _
 from frappe.utils import flt
 
 @frappe.whitelist()
@@ -8,7 +7,12 @@ def exportar_ubl(sales_invoice_name):
     company = frappe.get_doc('Company', invoice.company)
     customer = frappe.get_doc('Customer', invoice.customer)
 
-    #Impuestos
+    # Calcular totales reales
+    line_total = sum(flt(d.amount, 2) for d in invoice.items)
+    tax_total = sum(flt(tax.tax_amount, 2) for tax in invoice.taxes)
+    grand_total = flt(line_total + tax_total, 2)
+
+    # === Impuestos ===
     tax_lines = ""
     for tax in invoice.taxes:
         tax_lines += f"""
@@ -29,12 +33,12 @@ def exportar_ubl(sales_invoice_name):
         </cac:TaxTotal>
         """
 
-    #Pagos
+    # === Pagos ===
     payment_lines = ""
     for idx, p in enumerate(invoice.payments, start=1):
         payment_lines += f"""
         <cac:PaymentMeans>
-            <cbc:PaymentMeansCode>42</cbc:PaymentMeansCode> <!-- Transferencia -->
+            <cbc:PaymentMeansCode>42</cbc:PaymentMeansCode>
             <cbc:PaymentID>{p.reference_no or f"PAY-{idx}"}</cbc:PaymentID>
             <cac:PayeeFinancialAccount>
                 <cbc:ID>{p.account}</cbc:ID>
@@ -42,9 +46,27 @@ def exportar_ubl(sales_invoice_name):
         </cac:PaymentMeans>
         """
 
-    #XML UBL básico + secciones insertadas
+    # === Líneas de factura ===
+    invoice_lines = ""
+    for idx, item in enumerate(invoice.items, start=1):
+        invoice_lines += f"""
+        <cac:InvoiceLine>
+            <cbc:ID>{idx}</cbc:ID>
+            <cbc:InvoicedQuantity unitCode="EA">{flt(item.qty, 2)}</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount currencyID="{invoice.currency}">{flt(item.amount, 2)}</cbc:LineExtensionAmount>
+            <cac:Item>
+                <cbc:Name>{item.item_name}</cbc:Name>
+            </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="{invoice.currency}">{flt(item.rate, 2)}</cbc:PriceAmount>
+            </cac:Price>
+        </cac:InvoiceLine>
+        """
+
+    # === XML final ===
     ubl_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
          xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
     <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
     <cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
@@ -70,24 +92,7 @@ def exportar_ubl(sales_invoice_name):
 
     {tax_lines}
 
-    <cac:LegalMonetaryTotal>
-        <cbc:PayableAmount currencyID="{invoice.currency}">{invoice.rounded_total}</cbc:PayableAmount>
-    </cac:LegalMonetaryTotal>
-
-    {payment_lines}
-
-    <cac:InvoiceLine>
-        <cbc:ID>1</cbc:ID>
-        <cbc:InvoicedQuantity unitCode="EA">1.0</cbc:InvoicedQuantity>
-        <cbc:LineExtensionAmount currencyID="{invoice.currency}">1.0</cbc:LineExtensionAmount>
-        <cac:Item>
-            <cbc:Name>Ejemplo</cbc:Name>
-        </cac:Item>
-        <cac:Price>
-            <cbc:PriceAmount currencyID="{invoice.currency}">1.0</cbc:PriceAmount>
-        </cac:Price>
-    </cac:InvoiceLine>
+    <cac:LegalMonetaryTotal>e la factura al cliente vía API (sin descargar XML manualmente).lines}
 </Invoice>
 """
-
     return ubl_xml

@@ -10,8 +10,7 @@ doctype_js = {
     "Purchase Invoice": "public/js/purchase_invoice_ubl_form.js"
 }
 
-
-
+boot_session = "proyecto_fin_grado.utils.add_rol_to_boot"
 
 # Apps
 # ------------------

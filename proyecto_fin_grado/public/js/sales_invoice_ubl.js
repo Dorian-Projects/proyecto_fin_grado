@@ -1,6 +1,7 @@
 frappe.ui.form.on('Sales Invoice', {
     refresh: function(frm) {
-        if (frm.doc.docstatus === 1 && !frm.doc.is_return) {
+        if (frappe.boot.sitio_rol == "proveedor" || frappe.boot.sitio_rol == "admin") {
+            if (frm.doc.docstatus === 1 && !frm.doc.is_return) {
             frm.add_custom_button(__('Exportar UBL'), function() {
                 frappe.call({
                     method: 'proyecto_fin_grado.api.exportar_ubl',
@@ -21,6 +22,9 @@ frappe.ui.form.on('Sales Invoice', {
                     }
                 });
             });
+            }
         }
+
+        
     }
 });
