@@ -92,7 +92,7 @@ def exportar_ubl(sales_invoice_name):
 
     {tax_lines}
 
-    <cac:LegalMonetaryTotal>e la factura al cliente vía API (sin descargar XML manualmente).lines}
+    <cac:LegalMonetaryTotal>e la factura al cliente vía API (sin descargar XML manualmente).lines
 </Invoice>
 """
     return ubl_xml
