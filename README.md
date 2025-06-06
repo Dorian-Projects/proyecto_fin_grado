@@ -1,191 +1,162 @@
+# 📦 Automatización de Facturación Electrónica UBL entre Instancias ERPNext
 
-Automatización de Facturación Electrónica UBL entre Instancias ERPNext
+**Autor:** Dorian Miguel Flores Bonilla  
+**Centro:** IES Martínez Montañés  
+**Fecha:** Junio 2025
 
-Autor: Dorian Miguel Flores Bonilla
-Centro: IES Martínez Montañés
-Fecha: Junio 2025
-Índice
+---
 
-    Introducción
+## 📑 Índice
 
-    Objetivos del proyecto
+1. [Introducción](#1-introducción)  
+2. [Objetivos del proyecto](#2-objetivos-del-proyecto)  
+3. [Tecnologías utilizadas](#3-tecnologías-utilizadas)  
+4. [Estructura general del sistema](#4-estructura-general-del-sistema)  
+5. [Exportación de facturas UBL](#5-exportación-de-facturas-ubl)  
+6. [Problemas encontrados](#6-problemas-encontrados)  
+7. [Mejoras futuras](#7-mejoras-futuras)  
+8. [Código fuente comentado](#8-código-fuente-comentado)  
+9. [Conclusiones](#9-conclusiones)  
+10. [Anexos](#10-anexos)
 
-    Tecnologías utilizadas
+---
 
-    Estructura general del sistema
+## 1. Introducción
 
-    Exportación de facturas UBL
+En un mundo donde la interoperabilidad entre sistemas es crucial, este proyecto busca automatizar el intercambio de facturas electrónicas entre dos instancias ERPNext. ¿Cómo? A través del estándar internacional **UBL 2.1** y el uso de APIs REST.
 
-    Problemas encontrados
+La aplicación desarrollada permite generar un XML UBL desde una factura de venta y enviarlo automáticamente a otra instancia, donde se convierte en una factura de compra. Todo esto sin intervención manual, cumpliendo normas y ganando eficiencia.
 
-    Mejoras futuras
+> 📷 *Captura sugerida:* factura original en ERPNext antes de la exportación.
 
-    Código fuente comentado
+---
 
-    Conclusiones
+## 2. Objetivos del proyecto
 
-    Anexos
+### 🎯 Objetivo general
+Desarrollar una integración entre instancias ERPNext para enviar y recibir facturas en formato UBL usando API REST.
 
-1. Introducción
+### 🔍 Objetivos específicos
+- Generar archivos XML válidos con estructura UBL 2.1.  
+- Añadir un botón de exportación en el formulario de factura.  
+- Enviar automáticamente el XML a la instancia cliente.  
+- Verificar y crear proveedores en la instancia receptora.  
+- Prevenir facturas duplicadas.  
+- Registrar automáticamente la factura de compra.  
+- Permitir importación manual de facturas UBL.
 
-En un mundo donde la interoperabilidad entre sistemas es cada vez más crucial, este proyecto nace con una meta clara: automatizar el intercambio de facturas electrónicas entre dos instancias independientes de ERPNext. ¿La clave? Usar el estándar internacional UBL 2.1 para estructurar las facturas en formato XML y conectar todo mediante APIs REST.
+---
 
-A lo largo de este trabajo, se ha desarrollado una aplicación personalizada que permite generar el archivo XML a partir de una factura de venta. Este documento, una vez listo, se envía de forma automática a otra instancia, donde es interpretado y convertido en una factura de compra válida. Todo esto sin intervención manual. Todo esto, funcionando como debe.
+## 3. Tecnologías utilizadas
 
-(Aquí iría una captura de pantalla de una factura original en ERPNext antes de exportarse)
-2. Objetivos del proyecto
+- ✅ ERPNext v14  
+- ✅ Frappe Framework  
+- ✅ Python 3.10  
+- ✅ JavaScript (Client Side)  
+- ✅ XML UBL 2.1 + PEPPOL BIS Billing 3.0  
+- ✅ API RESTful  
+- ✅ Herramientas de prueba: Postman, curl
 
-Objetivo general:
+> 📷 *Captura sugerida:* consola de pruebas con Postman o curl.
 
-    Implementar una integración entre dos instancias de ERPNext que permita el envío y la recepción de facturas electrónicas en formato UBL utilizando una API RESTful.
+---
 
-Objetivos específicos:
+## 4. Estructura general del sistema
 
-    Generar archivos XML válidos con estructura UBL 2.1 a partir de facturas de venta.
+### 🖥 Sitios utilizados
 
-    Incorporar un botón de exportación directa en la interfaz de ERPNext.
+- `proveedor.localhost`: instancia emisora.  
+- `hospital.localhost`: instancia receptora.  
+- `development.localhost`: entorno de pruebas.
 
-    Enviar automáticamente los XML al cliente correspondiente.
+### 📁 App personalizada: `proyecto_fin_grado`
 
-    Verificar si el proveedor existe en la instancia receptora y crearlo si no.
+- `exportar_ubl.py`: genera XML desde factura.  
+- `api.py`: envío automático vía API.  
+- `purchase_invoice_import.py`: analiza y registra factura.  
+- `sales_invoice_ubl.js`: botón “Exportar UBL”.  
+- `purchase_invoice_ubl_form.js`: botón “Importar UBL”.
 
-    Evitar duplicados validando el identificador de la factura.
+### 🔄 Flujo de trabajo
 
-    Registrar automáticamente la factura de compra en el sistema receptor.
+1. Se crea y valida una factura de venta.  
+2. Se genera un archivo XML con formato UBL.  
+3. Se envía automáticamente vía API REST.  
+4. El receptor interpreta el XML y crea la factura de compra.
 
-    Permitir, además, una importación manual alternativa.
+> 📷 *Captura sugerida:* diagrama del flujo de datos entre instancias.
 
-3. Tecnologías utilizadas
+---
 
-Este proyecto se construyó sobre herramientas potentes y modernas:
+## 5. Exportación de facturas UBL
 
-    ERPNext v14
+El botón "Exportar UBL" se integra directamente en el formulario “Sales Invoice”. Al activarlo, se genera un XML UBL con todas las etiquetas necesarias: `<cbc:ID>`, `<cbc:IssueDate>`, `<cac:AccountingSupplierParty>`, etc.
 
-    Frappe Framework
+La exportación asegura:
+- Validación de campos obligatorios.  
+- Escapado de caracteres especiales.  
+- Formato correcto de fechas y divisas.
 
-    Python 3.10
+> 📷 *Captura sugerida:* botón "Exportar UBL" y fragmento del XML generado.
 
-    JavaScript (JS del lado cliente)
+---
 
-    XML UBL 2.1, perfil PEPPOL BIS Billing 3.0
+## 6. Problemas encontrados
 
-    API REST
+- ❗ Problemas con caracteres especiales como `&`, `<`, `>`.  
+- ❗ Falta de etiquetas requeridas por validadores UBL.  
+- ❗ Detección de duplicados al importar.  
+- ❗ Necesidad de crear proveedores nuevos automáticamente.  
+- ❗ Fallos de autenticación API resueltos con tokens personalizados.
 
-    Postman y curl para pruebas de endpoints
+> 📷 *Captura sugerida:* error de validación y solución aplicada.
 
-(Aquí se recomienda insertar una captura del entorno de desarrollo: por ejemplo, usando Postman para probar la API)
-4. Estructura general del sistema
-Sitios utilizados
+---
 
-    proveedor.localhost: es la instancia emisora; genera y envía la factura.
+## 7. Mejoras futuras
 
-    hospital.localhost: recibe el XML e importa la factura como una factura de compra.
+- 🔐 Firma digital de los XML con certificados X.509.  
+- 🧪 Validación automática contra esquemas XSD.  
+- 📊 Panel de seguimiento visual de facturas.  
+- 🧾 Registro detallado de logs en cada fase del proceso.  
+- 🌐 Soporte multicliente y autenticación avanzada.
 
-    development.localhost: entorno seguro de pruebas y validaciones.
+> 📷 *Captura sugerida:* mockup del panel de seguimiento de facturas.
 
-Aplicación personalizada: proyecto_fin_grado
+---
 
-La app desarrollada incluye los siguientes archivos clave:
+## 8. Código fuente comentado
 
-    exportar_ubl.py: genera el XML desde la factura.
+### Envío del XML al cliente
+Se usa `requests.post()` con el XML como cuerpo y un token de autorización en cabecera.
 
-    api.py: se encarga de enviar el XML al cliente mediante una solicitud POST.
+### Importación del XML en hospital.localhost
+Se recibe el XML, se analiza, se comprueba si el proveedor existe, y si no, se crea. Luego se registra la `Purchase Invoice`.
 
-    purchase_invoice_import.py: recibe el XML, lo analiza y genera la factura de compra.
+> 📷 *Captura sugerida:* fragmento de `exportar_ubl.py` y `purchase_invoice_import.py`.
 
-    sales_invoice_ubl.js: añade el botón "Exportar UBL" en la interfaz de la factura.
+---
 
-    purchase_invoice_ubl_form.js: añade el botón "Importar UBL" para carga manual.
+## 9. Conclusiones
 
-Flujo de trabajo
+Este proyecto demuestra que es totalmente viable automatizar el proceso de facturación entre ERPNexts usando tecnologías abiertas, APIs REST y el estándar UBL. Los beneficios hablan por sí solos:
 
-    El proveedor genera y valida una factura de venta.
+- Menos errores.  
+- Menos tareas repetitivas.  
+- Más integración.  
+- Y más tiempo para lo que realmente importa.
 
-    El sistema genera automáticamente un archivo XML con formato UBL.
+ERPNext y Frappe han demostrado ser herramientas potentes y flexibles para este tipo de soluciones.
 
-    Ese archivo se envía al sistema hospital.localhost vía API.
+> 📷 *Captura sugerida:* mensaje de éxito al importar una factura.
 
-    El sistema receptor analiza el contenido, verifica el proveedor y crea la factura de compra.
+---
 
-(Aquí iría una imagen o esquema visual del flujo de datos entre ambas instancias)
-5. Exportación de facturas UBL
+## 10. Anexos
 
-Se incorporó un botón directamente en el formulario “Sales Invoice”. Al hacer clic, se realiza una llamada al servidor para generar el archivo XML siguiendo las especificaciones UBL.
+### 📄 Fragmento del XML UBL generado
 
-Se utilizaron etiquetas clave como <cbc:ID>, <cbc:IssueDate>, <cac:AccountingSupplierParty> y <cac:LegalMonetaryTotal>. El sistema también se encarga de validar campos obligatorios, escapar caracteres especiales y formatear fechas/divisas correctamente.
-
-*(Captura recomendada: botón “Exportar UBL” en una factura)
-*(Otra captura: fragmento del XML generado)
-6. Problemas encontrados
-
-Como en todo desarrollo real, nos topamos con obstáculos. Aquí van los más relevantes:
-
-    Caracteres especiales como &, < y > invalidaban el XML. Se solucionó aplicando funciones de escape.
-
-    Algunos validadores requerían campos opcionales como <TaxTotal>. Se añadieron condicionalmente.
-
-    Se implementó un sistema para detectar y evitar la creación de facturas duplicadas.
-
-    La creación automática de proveedores implicó validar por nombre y, si era necesario, crear uno nuevo.
-
-    En cuanto a la seguridad, los problemas con la autenticación inicial de la API se resolvieron usando tokens personalizados.
-
-(Captura sugerida: error de validación UBL y cómo se solucionó)
-7. Mejoras futuras
-
-Este sistema es funcional, pero aún tiene margen para crecer. Estas son algunas ideas para versiones futuras:
-
-    Incorporar firma digital (X.509) a los XML generados.
-
-    Validar automáticamente el XML usando esquemas XSD.
-
-    Añadir un panel visual para ver el estado de las facturas enviadas y recibidas.
-
-    Registrar logs detallados por cada paso del proceso.
-
-    Hacer el sistema escalable para múltiples clientes/proveedores, con claves de autenticación por separado.
-
-(Captura recomendada: diseño simulado o mockup del panel de seguimiento)
-8. Código fuente comentado
-Envío del XML al cliente
-
-    Se usa requests.post() desde el servidor del proveedor.
-
-    Se adjunta el token de autenticación en las cabeceras HTTP.
-
-    El archivo XML se envía como cuerpo de la solicitud.
-
-Recepción e importación del XML
-
-    El endpoint receptor analiza el archivo, lo convierte en cadena, y extrae los datos.
-
-    Si el proveedor no está registrado, se crea automáticamente.
-
-    Si el ID de factura ya existe, se cancela el proceso.
-
-    Finalmente, se genera la factura de compra (Purchase Invoice).
-
-(Captura recomendada: fragmentos clave de código en exportar_ubl.py y purchase_invoice_import.py)
-9. Conclusiones
-
-Este proyecto demuestra que es completamente viable automatizar la facturación electrónica entre dos instancias ERP distintas, usando estándares internacionales como UBL y tecnologías abiertas.
-
-Los beneficios son claros:
-
-    Menos errores humanos.
-
-    Mayor eficiencia.
-
-    Comunicación sin barreras técnicas.
-
-    Cumplimiento normativo.
-
-ERPNext y Frappe han respondido de forma flexible y potente, permitiendo desarrollar soluciones a medida con rapidez y estabilidad.
-
-(Captura sugerida: mensaje de éxito tras importar una factura en hospital.localhost)
-10. Anexos
-Fragmento del XML UBL generado
-
+```xml
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
   <cbc:ID>INV-0001</cbc:ID>
   <cbc:IssueDate>2025-06-01</cbc:IssueDate>
@@ -193,17 +164,3 @@ Fragmento del XML UBL generado
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   ...
 </Invoice>
-
-Capturas sugeridas
-
-    Factura de venta con botón “Exportar UBL”
-
-    Vista previa del XML generado
-
-    Registro de factura de compra en el sistema receptor
-
-    Interfaz de importación manual
-
-    Diagrama del flujo general
-
-    Código fuente de funciones clave
