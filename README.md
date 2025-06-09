@@ -1,4 +1,4 @@
-# 📦 Automatización de Facturación Electrónica UBL entre Instancias ERPNext
+# Automatización de Facturación Electrónica UBL entre Instancias ERPNext
 
 **Autor:** Dorian Miguel Flores Bonilla  
 **Centro:** IES Martínez Montañés  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📑 Índice
+## Índice
 
 1. [Introducción](#1-introducción)  
 2. [Objetivos del proyecto](#2-objetivos-del-proyecto)  
@@ -27,16 +27,17 @@ En un mundo donde la interoperabilidad entre sistemas es crucial, este proyecto 
 
 La aplicación desarrollada permite generar un XML UBL desde una factura de venta y enviarlo automáticamente a otra instancia, donde se convierte en una factura de compra. Todo esto sin intervención manual, cumpliendo normas y ganando eficiencia.
 
-> 📷 *Captura sugerida:* factura original en ERPNext antes de la exportación.
+>![imagen](https://github.com/user-attachments/assets/5e01aba9-291a-4c77-ab2b-c0edbc022b3c)
+
 
 ---
 
 ## 2. Objetivos del proyecto
 
-### 🎯 Objetivo general
+###  Objetivo general
 Desarrollar una integración entre instancias ERPNext para enviar y recibir facturas en formato UBL usando API REST.
 
-### 🔍 Objetivos específicos
+###  Objetivos específicos
 - Generar archivos XML válidos con estructura UBL 2.1.  
 - Añadir un botón de exportación en el formulario de factura.  
 - Enviar automáticamente el XML a la instancia cliente.  
@@ -49,42 +50,43 @@ Desarrollar una integración entre instancias ERPNext para enviar y recibir fact
 
 ## 3. Tecnologías utilizadas
 
-- ✅ ERPNext v14  
-- ✅ Frappe Framework  
-- ✅ Python 3.10  
-- ✅ JavaScript (Client Side)  
-- ✅ XML UBL 2.1 + PEPPOL BIS Billing 3.0  
-- ✅ API RESTful  
-- ✅ Herramientas de prueba: Postman, curl
+-  ERPNext v14  
+-  Frappe Framework  
+-  Python 3.10  
+-  JavaScript  
+-  XML UBL 2.1 + PEPPOL BIS Billing 3.0  
+-  API RESTful  
+  
+> ![imagen](https://github.com/user-attachments/assets/cc3a5548-cb90-4f12-b6c8-91d8b249d4cb)
 
-> 📷 *Captura sugerida:* consola de pruebas con Postman o curl.
 
 ---
 
 ## 4. Estructura general del sistema
 
-### 🖥 Sitios utilizados
+###  Sitios utilizados
 
 - `proveedor.localhost`: instancia emisora.  
 - `hospital.localhost`: instancia receptora.  
 - `development.localhost`: entorno de pruebas.
 
-### 📁 App personalizada: `proyecto_fin_grado`
-
-- `exportar_ubl.py`: genera XML desde factura.  
-- `api.py`: envío automático vía API.  
+###  App personalizada: `proyecto_fin_grado`
+ 
+- `api.py`: envío automático vía API y genera XML para exportar o enviar.  
 - `purchase_invoice_import.py`: analiza y registra factura.  
-- `sales_invoice_ubl.js`: botón “Exportar UBL”.  
+- `sales_invoice_ubl.js`: botón “Exportar UBL”, "Enviar a Cliente".  
 - `purchase_invoice_ubl_form.js`: botón “Importar UBL”.
 
-### 🔄 Flujo de trabajo
+###  Flujo de trabajo
 
 1. Se crea y valida una factura de venta.  
 2. Se genera un archivo XML con formato UBL.  
 3. Se envía automáticamente vía API REST.  
 4. El receptor interpreta el XML y crea la factura de compra.
 
-> 📷 *Captura sugerida:* diagrama del flujo de datos entre instancias.
+> ![imagen](https://github.com/user-attachments/assets/dae60f94-af90-42cb-9815-3063b9355c3b)
+>![imagen](https://github.com/user-attachments/assets/58f04792-cb36-4de6-a9a2-466a81582eb4)
+
 
 ---
 
@@ -97,31 +99,32 @@ La exportación asegura:
 - Escapado de caracteres especiales.  
 - Formato correcto de fechas y divisas.
 
-> 📷 *Captura sugerida:* botón "Exportar UBL" y fragmento del XML generado.
+> ![imagen](https://github.com/user-attachments/assets/e07f3f86-5dd7-4bb6-a5d6-05dd1de79661)
+> ![imagen](https://github.com/user-attachments/assets/007601d4-6396-4ea8-8c58-5dfcc540ba70)
+
+
 
 ---
 
 ## 6. Problemas encontrados
 
-- ❗ Problemas con caracteres especiales como `&`, `<`, `>`.  
-- ❗ Falta de etiquetas requeridas por validadores UBL.  
-- ❗ Detección de duplicados al importar.  
-- ❗ Necesidad de crear proveedores nuevos automáticamente.  
-- ❗ Fallos de autenticación API resueltos con tokens personalizados.
+-  Problemas con caracteres especiales como `&`, `<`, `>`.  
+-  Falta de etiquetas requeridas por validadores UBL.  
+-  Detección de duplicados al importar.  
+-  Necesidad de crear proveedores nuevos automáticamente.  
+-  Fallos de autenticación API resueltos con tokens personalizados.
 
-> 📷 *Captura sugerida:* error de validación y solución aplicada.
 
 ---
 
 ## 7. Mejoras futuras
 
-- 🔐 Firma digital de los XML con certificados X.509.  
-- 🧪 Validación automática contra esquemas XSD.  
-- 📊 Panel de seguimiento visual de facturas.  
-- 🧾 Registro detallado de logs en cada fase del proceso.  
-- 🌐 Soporte multicliente y autenticación avanzada.
+-  Firma digital de los XML con certificados X.509.  
+-  Validación automática contra esquemas XSD.  
+-  Panel de seguimiento visual de facturas.  
+-  Registro detallado de logs en cada fase del proceso.  
+-  Soporte multicliente y autenticación avanzada.
 
-> 📷 *Captura sugerida:* mockup del panel de seguimiento de facturas.
 
 ---
 
@@ -132,8 +135,6 @@ Se usa `requests.post()` con el XML como cuerpo y un token de autorización en c
 
 ### Importación del XML en hospital.localhost
 Se recibe el XML, se analiza, se comprueba si el proveedor existe, y si no, se crea. Luego se registra la `Purchase Invoice`.
-
-> 📷 *Captura sugerida:* fragmento de `exportar_ubl.py` y `purchase_invoice_import.py`.
 
 ---
 
@@ -148,19 +149,45 @@ Este proyecto demuestra que es totalmente viable automatizar el proceso de factu
 
 ERPNext y Frappe han demostrado ser herramientas potentes y flexibles para este tipo de soluciones.
 
-> 📷 *Captura sugerida:* mensaje de éxito al importar una factura.
+> ![imagen](https://github.com/user-attachments/assets/6176c57f-af26-46a4-8537-f2a70ecbc4b8)
 
 ---
 
 ## 10. Anexos
 
-### 📄 Fragmento del XML UBL generado
-
-```xml
-<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
-  <cbc:ID>INV-0001</cbc:ID>
-  <cbc:IssueDate>2025-06-01</cbc:IssueDate>
-  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
-  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
-  ...
+###  Fragmento del XML UBL generado
+<Invoice>
+<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+<cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
+<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+<cbc:ID>ACC-SINV-2025-00012</cbc:ID>
+<cbc:IssueDate>2025-06-09</cbc:IssueDate>
+<cac:AccountingSupplierParty>
+<cac:Party>
+<cac:PartyName>
+<cbc:Name>Medicamentos SL (Demo)</cbc:Name>
+</cac:PartyName>
+</cac:Party>
+</cac:AccountingSupplierParty>
+<cac:AccountingCustomerParty>
+<cac:Party>
+<cac:PartyName>
+<cbc:Name>Hospital Flobon</cbc:Name>
+</cac:PartyName>
+</cac:Party>
+</cac:AccountingCustomerParty>
+<cac:LegalMonetaryTotal>
+<cbc:PayableAmount currencyID="EUR">800.0</cbc:PayableAmount>
+</cac:LegalMonetaryTotal>
+<cac:InvoiceLine>
+<cbc:ID>1</cbc:ID>
+<cbc:InvoicedQuantity unitCode="EA">1.0</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="EUR">800.0</cbc:LineExtensionAmount>
+<cac:Item>
+<cbc:Description>Viagra</cbc:Description>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="EUR">800.0</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
 </Invoice>
