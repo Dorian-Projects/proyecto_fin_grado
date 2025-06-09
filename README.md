@@ -117,14 +117,11 @@ La exportación asegura:
 
 ---
 
-## 7. Mejoras futuras
+## 7 Mejoras futuras
 
--  Firma digital de los XML con certificados X.509.  
--  Validación automática contra esquemas XSD.  
--  Panel de seguimiento visual de facturas.  
--  Registro detallado de logs en cada fase del proceso.  
--  Soporte multicliente y autenticación avanzada.
-
+- Notificaciones automáticas por correo al enviar o recibir una factura.  
+- Integración con PEPPOL para compatibilidad con plataformas europeas.  
+- Historial de versiones de facturas con trazabilidad de cambios.
 
 ---
 
