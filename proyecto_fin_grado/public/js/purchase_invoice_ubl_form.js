@@ -1,5 +1,6 @@
 frappe.listview_settings['Purchase Invoice'] = {
-    onload: function (listview) {
+    refresh: function (listview) {
+     
         if (frappe.boot.sitio_rol === "cliente" || frappe.boot.sitio_rol === "admin") {
             listview.page.add_inner_button(__('Importar UBL'), function () {
                 const dialog = new frappe.ui.Dialog({
@@ -20,7 +21,6 @@ frappe.listview_settings['Purchase Invoice'] = {
                             return;
                         }
 
-                        // Descargar archivo desde la URL (fetch)
                         const full_url = window.location.origin + values.archivo_xml;
 
                         fetch(full_url)
