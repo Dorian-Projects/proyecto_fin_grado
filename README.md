@@ -153,38 +153,47 @@ ERPNext y Frappe han demostrado ser herramientas potentes y flexibles para este 
 ## 10. Anexos
 
 ###  Fragmento del XML UBL generado
+# Ejemplo de Factura UBL 2.1 - PEPPOL BIS Billing 3.0
+
+Este es un ejemplo de factura en formato UBL 2.1 compatible con el perfil PEPPOL BIS Billing 3.0. La factura representa una compra realizada por el Hospital Flobon a Medicamentos SL (Demo).
+
+```xml
 <Invoice>
-<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
-<cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
-<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-<cbc:ID>ACC-SINV-2025-00012</cbc:ID>
-<cbc:IssueDate>2025-06-09</cbc:IssueDate>
-<cac:AccountingSupplierParty>
-<cac:Party>
-<cac:PartyName>
-<cbc:Name>Medicamentos SL (Demo)</cbc:Name>
-</cac:PartyName>
-</cac:Party>
-</cac:AccountingSupplierParty>
-<cac:AccountingCustomerParty>
-<cac:Party>
-<cac:PartyName>
-<cbc:Name>Hospital Flobon</cbc:Name>
-</cac:PartyName>
-</cac:Party>
-</cac:AccountingCustomerParty>
-<cac:LegalMonetaryTotal>
-<cbc:PayableAmount currencyID="EUR">800.0</cbc:PayableAmount>
-</cac:LegalMonetaryTotal>
-<cac:InvoiceLine>
-<cbc:ID>1</cbc:ID>
-<cbc:InvoicedQuantity unitCode="EA">1.0</cbc:InvoicedQuantity>
-<cbc:LineExtensionAmount currencyID="EUR">800.0</cbc:LineExtensionAmount>
-<cac:Item>
-<cbc:Description>Viagra</cbc:Description>
-</cac:Item>
-<cac:Price>
-<cbc:PriceAmount currencyID="EUR">800.0</cbc:PriceAmount>
-</cac:Price>
-</cac:InvoiceLine>
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>ACC-SINV-2025-00012</cbc:ID>
+  <cbc:IssueDate>2025-06-09</cbc:IssueDate>
+
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Medicamentos SL (Demo)</cbc:Name>
+      </cac:PartyName>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Hospital Flobon</cbc:Name>
+      </cac:PartyName>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+
+  <cac:LegalMonetaryTotal>
+    <cbc:PayableAmount currencyID="EUR">800.0</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">800.0</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Viagra</cbc:Description>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">800.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
 </Invoice>
